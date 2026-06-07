@@ -1,11 +1,11 @@
 ## Netlify config for NeonTube (TanStack Start + Nitro)
-## With NITRO_PRESET=netlify, Nitro builds a Netlify Function AND writes
-## its own _redirects into .output/public. Do NOT add a manual catch-all
-## redirect or override the publish dir — that's what caused the 404.
+## The Nitro Netlify preset emits public assets to dist/ and the server
+## function to .netlify/functions-internal/. Netlify reads the generated
+## function config automatically, so no manual redirect is needed.
 
 [build]
   command = "npm run build"
-  publish = ".output/public"
+  publish = "dist"
 
 [build.environment]
   NITRO_PRESET = "netlify"
