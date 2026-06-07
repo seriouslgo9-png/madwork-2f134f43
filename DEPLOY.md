@@ -28,6 +28,13 @@ A `netlify.toml` is already in the repo. It tells Netlify to:
 3. Leave the build settings empty — `netlify.toml` provides everything.
 4. Click **Deploy**.
 
+If Netlify already has manual settings saved, set them to:
+- **Build command:** `npm run build`
+- **Publish directory:** `dist`
+- **Base directory:** empty / repository root
+
+Then run **Clear cache and deploy site** once so Netlify stops using the old missing publish folder.
+
 ### If your previous Netlify deploy errored
 
 The previous failure was almost certainly one of these:
