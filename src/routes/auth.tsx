@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { toast, Toaster } from "sonner";
 import { Loader2, Mail, Lock, Youtube, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,8 +15,8 @@ export const Route = createFileRoute("/auth")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Sign in · NeonTube" },
-      { name: "description", content: "Sign in or create an account to use NeonTube Downloader." },
+      { title: "Sign in · MS Tube" },
+      { name: "description", content: "Sign in or create an account to use MS Tube Downloader." },
     ],
   }),
   component: AuthPage,
@@ -76,19 +75,6 @@ function AuthPage() {
     }
   };
 
-  const handleGoogle = async () => {
-    setBusy(true);
-    const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
-    });
-    if (result.error) {
-      toast.error("Google sign-in failed");
-      setBusy(false);
-      return;
-    }
-    if (result.redirected) return;
-    afterSuccess();
-  };
 
   return (
     <div className="relative min-h-screen animated-bg">
@@ -116,7 +102,7 @@ function AuthPage() {
           <div className="gradient-neon flex size-14 items-center justify-center rounded-2xl neon-glow-purple">
             <Youtube className="size-7 text-primary-foreground" />
           </div>
-          <h1 className="text-3xl font-black text-gradient-neon neon-text">NeonTube</h1>
+          <h1 className="text-3xl font-black text-gradient-neon neon-text">MS Tube</h1>
           <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
             {mode === "signup" ? "Create your account" : "Sign in to continue"}
           </p>
@@ -127,37 +113,6 @@ function AuthPage() {
           animate={{ opacity: 1, scale: 1 }}
           className="glass w-full rounded-2xl p-6"
         >
-          <Button
-            type="button"
-            onClick={handleGoogle}
-            disabled={busy}
-            className="mb-4 h-11 w-full bg-white text-black hover:bg-white/90"
-          >
-            <svg className="size-5" viewBox="0 0 24 24">
-              <path
-                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.76h3.56c2.08-1.92 3.28-4.74 3.28-8.09Z"
-                fill="#4285F4"
-              />
-              <path
-                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.56-2.76c-.99.66-2.25 1.06-3.72 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23Z"
-                fill="#34A853"
-              />
-              <path
-                d="M5.84 14.11A6.6 6.6 0 0 1 5.48 12c0-.73.13-1.45.36-2.11V7.05H2.18a11 11 0 0 0 0 9.9l3.66-2.84Z"
-                fill="#FBBC05"
-              />
-              <path
-                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.05l3.66 2.84C6.71 7.31 9.14 5.38 12 5.38Z"
-                fill="#EA4335"
-              />
-            </svg>
-            Continue with Google
-          </Button>
-
-          <div className="my-4 flex items-center gap-3 text-xs uppercase tracking-widest text-muted-foreground">
-            <div className="h-px flex-1 bg-white/10" /> or email <div className="h-px flex-1 bg-white/10" />
-          </div>
-
           <form onSubmit={handleEmail} className="space-y-3">
             {mode === "signup" && (
               <div className="space-y-1.5">
