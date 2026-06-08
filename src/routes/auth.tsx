@@ -13,6 +13,7 @@ import { Lightning } from "@/components/Lightning";
 import { playWelcome } from "@/lib/welcome-sound";
 
 export const Route = createFileRoute("/auth")({
+  ssr: false,
   head: () => ({
     meta: [
       { title: "Sign in · NeonTube" },
