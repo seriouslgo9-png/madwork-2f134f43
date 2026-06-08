@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { toast, Toaster } from "sonner";
 import { Loader2, Mail, Lock, Youtube, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,8 +15,8 @@ export const Route = createFileRoute("/auth")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Sign in · NeonTube" },
-      { name: "description", content: "Sign in or create an account to use NeonTube Downloader." },
+      { title: "Sign in · MS Tube" },
+      { name: "description", content: "Sign in or create an account to use MS Tube Downloader." },
     ],
   }),
   component: AuthPage,
@@ -76,19 +75,6 @@ function AuthPage() {
     }
   };
 
-  const handleGoogle = async () => {
-    setBusy(true);
-    const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
-    });
-    if (result.error) {
-      toast.error("Google sign-in failed");
-      setBusy(false);
-      return;
-    }
-    if (result.redirected) return;
-    afterSuccess();
-  };
 
   return (
     <div className="relative min-h-screen animated-bg">
@@ -116,7 +102,7 @@ function AuthPage() {
           <div className="gradient-neon flex size-14 items-center justify-center rounded-2xl neon-glow-purple">
             <Youtube className="size-7 text-primary-foreground" />
           </div>
-          <h1 className="text-3xl font-black text-gradient-neon neon-text">NeonTube</h1>
+          <h1 className="text-3xl font-black text-gradient-neon neon-text">MS Tube</h1>
           <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
             {mode === "signup" ? "Create your account" : "Sign in to continue"}
           </p>
