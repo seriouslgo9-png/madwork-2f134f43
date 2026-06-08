@@ -1,15 +1,20 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { useState } from "react";
-import { Toaster } from "sonner";
-import { Github, Youtube } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Toaster, toast } from "sonner";
+import { LogOut, Youtube, Zap } from "lucide-react";
 import { ParticleBackground } from "@/components/ParticleBackground";
+import { Lightning } from "@/components/Lightning";
 import { Marquee } from "@/components/Marquee";
 import { DownloaderCard } from "@/components/DownloaderCard";
 import { RecentDownloads, type RecentItem } from "@/components/RecentDownloads";
 import { isBackendConfigured } from "@/lib/download-api";
+import { supabase } from "@/integrations/supabase/client";
+import { playWelcome } from "@/lib/welcome-sound";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/")({
+  ssr: false,
   head: () => ({
     meta: [
       { title: "NeonTube Downloader — Fast MP3 & MP4 YouTube Downloads" },
@@ -29,7 +34,39 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const navigate = useNavigate();
   const [recent, setRecent] = useState<RecentItem[]>([]);
+  const [userName, setUserName] = useState<string | null>(null);
+  const [checking, setChecking] = useState(true);
+  const welcomedRef = useRef(false);
+
+  useEffect(() => {
+    let mounted = true;
+    supabase.auth.getUser().then(({ data }) => {
+      if (!mounted) return;
+      if (!data.user) {
+        navigate({ to: "/auth" });
+        return;
+      }
+      const name =
+        (data.user.user_metadata?.full_name as string | undefined) ||
+        (data.user.user_metadata?.name as string | undefined) ||
+        data.user.email?.split("@")[0] ||
+        "friend";
+      setUserName(name);
+      setChecking(false);
+      // Play welcome once per page mount after a fresh login
+      const flag = sessionStorage.getItem("neontube_welcomed");
+      if (!flag && !welcomedRef.current) {
+        welcomedRef.current = true;
+        sessionStorage.setItem("neontube_welcomed", "1");
+        playWelcome(name);
+      }
+    });
+    return () => {
+      mounted = false;
+    };
+  }, [navigate]);
 
   const addRecent = (item: Omit<RecentItem, "id" | "at">) => {
     setRecent((r) =>
@@ -37,9 +74,28 @@ function Index() {
     );
   };
 
+  const handleSignOut = async () => {
+    sessionStorage.removeItem("neontube_welcomed");
+    await supabase.auth.signOut();
+    toast.success("Signed out");
+    navigate({ to: "/auth" });
+  };
+
+  if (checking) {
+    return (
+      <div className="relative flex min-h-screen items-center justify-center animated-bg">
+        <Lightning />
+        <div className="text-sm uppercase tracking-[0.3em] text-muted-foreground">
+          Charging the grid…
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="relative min-h-screen animated-bg">
       <ParticleBackground />
+      <Lightning />
       <Toaster
         theme="dark"
         position="top-right"
@@ -55,7 +111,6 @@ function Index() {
 
       <Marquee />
 
-      {/* Nav */}
       <header className="relative z-10 mx-auto flex max-w-7xl items-center justify-between px-6 py-6">
         <div className="flex items-center gap-3">
           <div className="gradient-neon flex size-10 items-center justify-center rounded-xl neon-glow-purple">
@@ -66,16 +121,24 @@ function Index() {
             <h1 className="font-bold text-gradient-neon">NeonTube</h1>
           </div>
         </div>
-        <a
-          href="#"
-          className="glass hidden items-center gap-2 rounded-full px-4 py-2 text-xs uppercase tracking-widest text-muted-foreground transition hover:text-foreground sm:flex"
-        >
-          <Github className="size-4" /> v1.0
-        </a>
+        <div className="flex items-center gap-2">
+          <div className="glass hidden items-center gap-2 rounded-full px-4 py-2 text-xs uppercase tracking-widest text-muted-foreground sm:flex">
+            <Zap className="size-3.5 text-[var(--neon-blue)]" />
+            <span className="text-foreground">{userName}</span>
+          </div>
+          <Button
+            onClick={handleSignOut}
+            variant="outline"
+            size="sm"
+            className="glass border-white/10"
+          >
+            <LogOut className="size-4" />
+            <span className="hidden sm:inline">Sign out</span>
+          </Button>
+        </div>
       </header>
 
       <main className="relative z-10 mx-auto max-w-5xl px-6 pb-24 pt-8">
-        {/* Hero */}
         <section className="mb-12 text-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
@@ -110,7 +173,6 @@ function Index() {
 
         <RecentDownloads items={recent} />
 
-        {/* Disclosure */}
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
