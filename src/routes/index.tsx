@@ -17,13 +17,13 @@ export const Route = createFileRoute("/")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "NeonTube Downloader — Fast MP3 & MP4 YouTube Downloads" },
+      { title: "MS Tube Downloader — Fast MP3 & MP4 YouTube Downloads" },
       {
         name: "description",
         content:
           "Download YouTube videos instantly in MP4 or MP3 with multiple quality options. Glassmorphism + neon cyberpunk UI.",
       },
-      { property: "og:title", content: "NeonTube Downloader" },
+      { property: "og:title", content: "MS Tube Downloader" },
       {
         property: "og:description",
         content: "Fast, High Quality, MP3 & MP4 Downloads.",
@@ -118,7 +118,7 @@ function Index() {
           </div>
           <div>
             <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">MadWork</p>
-            <h1 className="font-bold text-gradient-neon">NeonTube</h1>
+            <h1 className="font-bold text-gradient-neon">MS Tube</h1>
           </div>
         </div>
         <div className="flex items-center gap-2">
