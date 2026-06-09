@@ -9,11 +9,17 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as MusicRouteImport } from './routes/music'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiInfoRouteImport } from './routes/api/info'
 import { Route as ApiDownloadRouteImport } from './routes/api/download'
 
+const MusicRoute = MusicRouteImport.update({
+  id: '/music',
+  path: '/music',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -38,12 +44,14 @@ const ApiDownloadRoute = ApiDownloadRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/music': typeof MusicRoute
   '/api/download': typeof ApiDownloadRoute
   '/api/info': typeof ApiInfoRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/music': typeof MusicRoute
   '/api/download': typeof ApiDownloadRoute
   '/api/info': typeof ApiInfoRoute
 }
@@ -51,26 +59,35 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/music': typeof MusicRoute
   '/api/download': typeof ApiDownloadRoute
   '/api/info': typeof ApiInfoRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/api/download' | '/api/info'
+  fullPaths: '/' | '/auth' | '/music' | '/api/download' | '/api/info'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/api/download' | '/api/info'
-  id: '__root__' | '/' | '/auth' | '/api/download' | '/api/info'
+  to: '/' | '/auth' | '/music' | '/api/download' | '/api/info'
+  id: '__root__' | '/' | '/auth' | '/music' | '/api/download' | '/api/info'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
+  MusicRoute: typeof MusicRoute
   ApiDownloadRoute: typeof ApiDownloadRoute
   ApiInfoRoute: typeof ApiInfoRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/music': {
+      id: '/music'
+      path: '/music'
+      fullPath: '/music'
+      preLoaderRoute: typeof MusicRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -105,9 +122,20 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
+  MusicRoute: MusicRoute,
   ApiDownloadRoute: ApiDownloadRoute,
   ApiInfoRoute: ApiInfoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
