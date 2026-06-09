@@ -1,8 +1,8 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { Toaster, toast } from "sonner";
-import { LogOut, Youtube, Zap } from "lucide-react";
+import { LogOut, Music, Youtube, Zap } from "lucide-react";
 import { ParticleBackground } from "@/components/ParticleBackground";
 import { Lightning } from "@/components/Lightning";
 import { Marquee } from "@/components/Marquee";
@@ -126,6 +126,13 @@ function Index() {
             <Zap className="size-3.5 text-[var(--neon-blue)]" />
             <span className="text-foreground">{userName}</span>
           </div>
+          <Link
+            to="/music"
+            className="glass inline-flex items-center gap-1.5 rounded-full border border-white/10 px-3 py-2 text-xs font-semibold uppercase tracking-widest text-foreground transition hover:bg-white/10"
+          >
+            <Music className="size-3.5 text-[var(--neon-pink)]" />
+            <span className="hidden sm:inline">Music</span>
+          </Link>
           <Button
             onClick={handleSignOut}
             variant="outline"
