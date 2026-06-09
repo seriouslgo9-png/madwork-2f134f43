@@ -76,7 +76,10 @@
     font-family: 'Inter', system-ui, sans-serif;
     overflow-x: hidden;
   }
+  /* This hides the badge */
+  #lovable-badge { display: none !important; }
 }
+
 
 @layer utilities {
   .glass {
