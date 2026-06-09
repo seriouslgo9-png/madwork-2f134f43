@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ParticleBackground } from "@/components/ParticleBackground";
-import { Lightning } from "@/components/Lightning";
+import { FloatingPosters } from "@/components/FloatingPosters";
 import { playWelcome } from "@/lib/welcome-sound";
 
 export const Route = createFileRoute("/auth")({
