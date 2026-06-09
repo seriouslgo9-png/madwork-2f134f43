@@ -79,7 +79,7 @@ function AuthPage() {
   return (
     <div className="relative min-h-screen animated-bg">
       <ParticleBackground />
-      <Lightning />
+      <FloatingPosters />
       <Toaster
         theme="dark"
         position="top-right"
