@@ -177,3 +177,16 @@
 .animate-bolt {
   animation: bolt-flash 1.2s ease-out forwards;
 }
+
+@keyframes poster-drop {
+  0% { transform: translate3d(0, -10vh, 0) rotate(0deg); opacity: 0; }
+  10% { opacity: 0.85; }
+  90% { opacity: 0.85; }
+  100% { transform: translate3d(var(--drift, 0px), 115vh, 0) rotate(40deg); opacity: 0; }
+}
+.animate-poster-drop {
+  animation-name: poster-drop;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform, opacity;
+}
